@@ -1,0 +1,162 @@
+﻿<style>
+  button{
+  padding: 15px 25px;
+  font-size: 24px;
+  text-align: center;
+  cursor: pointer;
+  outline: none;
+  color: #fff;
+  background-color: #04AA6D;
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 9px #999;
+  height:100px;
+  width:100px;
+  background:#26eba3;
+  color:black; 
+  font-style:italic;
+}
+  .header{
+  padding: 15px 25px;
+  font-size: 24px;
+  text-align: center;
+  outline: none;
+  color: white;
+  background-color: #04AA6D;
+  border: none;
+  border-radius: 15px;
+  height:100px;
+  width:100px;
+  background:#2980b9;
+  color:black; 
+  font-style:italic;
+  }
+.button:hover {
+ background-color: red
+}
+.button:active {
+ background-color: #3e8e41;
+ box-shadow: 0 5px #666;
+ transform: translateY(4px);
+}
+</style>
+
+
+<br/>
+<br/>
+<table align="center">
+<tr>
+<td class="header" id="b1">B</td>
+<td class="header" id="b2">I</td>
+<td class="header" id="b3">N</td>
+<td class="header" id="b4">G</td>
+<td class="header" id="b5">O</td>
+</tr>
+
+</table>
+<br/>
+<br/>
+<table align="center">
+<tr>
+        @for (int i = 0; i < Model.Count; i++)
+        {
+            if (i % 5 == 0)
+            {
+                @:</tr><tr>
+            }
+                    <td>
+                        <button class=@Model[i] id=@i onclick="setSelectedNumber(this)">@Model[i]</button>
+                    </td>
+        }
+</tr>
+</table>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.js"></script>
+
+<script>
+
+    var connection = new signalR.HubConnectionBuilder().withUrl("/bingohub").build(); 
+
+    connection.on("ReceiveMessage", function (playerName, selectedButton) {
+        console.log(playerName, selectedButton)
+        var selectedButton = document.getElementsByClassName(selectedButton);
+        selectedButton[0].style.backgroundColor = "red";
+        selectedButton[0].disabled = true;    
+    });
+
+    connection.on("ReceiveWinStatus", function (message) {
+        console.log(message)
+        alert(message);   
+    });
+
+    connection.start();
+    function setSelectedNumber(button){
+
+        button.style.backgroundColor = "red";
+        button.disabled = true;        
+
+        connection.invoke("SendMessage", "Ashen",button.innerHTML).catch(function (err) {
+        return console.error(err.toString());
+        });
+        console.log(button.id);
+
+        var jsonObject = { "buttonId": button.id};
+        sendSelectedNumber(JSON.stringify(jsonObject));
+}
+
+async function sendSelectedNumber(jsonData) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "checkWin", true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.onreadystatechange = function () {
+        if (xhr.status === 200) {
+            var data=  parseInt(this.responseText);
+            console.log(`${data} jj`);
+
+            if(data==1)
+            document.getElementById(`b1`).style.backgroundColor="yellow";
+                                    
+           if(data==2)  {
+            document.getElementById(`b1`).style.backgroundColor="yellow";
+            document.getElementById(`b2`).style.backgroundColor="yellow";
+           }          
+           
+                                    
+           if(data==3){
+            document.getElementById(`b1`).style.backgroundColor="yellow";
+            document.getElementById(`b2`).style.backgroundColor="yellow";
+            document.getElementById(`b3`).style.backgroundColor="yellow";
+           }            
+            
+                                    
+           if(data==4){
+            document.getElementById(`b1`).style.backgroundColor="yellow";
+            document.getElementById(`b2`).style.backgroundColor="yellow";
+            document.getElementById(`b3`).style.backgroundColor="yellow";
+            document.getElementById(`b4`).style.backgroundColor="yellow";
+           }            
+            
+
+           if(data==5)
+           {   
+            document.getElementById(`b1`).style.backgroundColor="yellow";
+            document.getElementById(`b2`).style.backgroundColor="yellow";
+            document.getElementById(`b3`).style.backgroundColor="yellow";
+            document.getElementById(`b5`).style.backgroundColor="yellow";
+            document.getElementById(`b4`).style.backgroundColor="yellow";
+            alert('BINGO!!!  You win');
+            checkforWin();
+           }
+        }
+    };
+    xhr.send(jsonData);
+    console.log(xhr.responseText)
+}
+
+function checkforWin()
+{
+     connection.invoke("SendWinStatus", "Bad Luck!!! You lost...)").catch(function (err) {
+        return console.error(err.toString());
+        });
+}
+
+</script>

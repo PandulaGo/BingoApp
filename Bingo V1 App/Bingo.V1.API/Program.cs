@@ -1,3 +1,4 @@
+using Bingo.V1.API.SignalR;
 using Bingo.V1.Business.Actions;
 using MediatR;
 
@@ -8,6 +9,9 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddMediatR(
 	typeof(GenerateBingoBoardCommandHandler).Assembly
 );
+
+builder.Services.AddSignalR();
+
 
 var app = builder.Build();
 
@@ -28,6 +32,8 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
 	name: "default",
-	pattern: "{controller=Home}/{action=Index}/{id?}");
+	pattern: "{controller=Bingo}/{action=Index}/{id?}");
+
+app.MapHub<BingoHub>("/bingohub");
 
 app.Run();

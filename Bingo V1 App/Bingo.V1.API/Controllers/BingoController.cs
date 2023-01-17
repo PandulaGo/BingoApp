@@ -24,14 +24,11 @@ namespace Bingo.V1.API.Controllers
 		
 		[HttpPost]
 		[Route("checkWin")]
-        public async Task<ActionResult> CheckWin([FromBody]string s)
+        public async Task<ActionResult<int>> CheckWin([FromBody]string s)
         {
-            //var boardNumbers = await mediator.Send(new GenerateBingoBoardCommand
-            //{
-            //    boardSize = 25
-            //});
+			var result = 3;
 
-			return Ok();
+			return Ok(result);
            
         }
     }

@@ -7,4 +7,9 @@ public class BingoHub :Hub
     {
         await Clients.All.SendAsync("ReceiveMessage", playerName, selectedButton);
     }
+
+    public async Task SendWinStatus(string message)
+    {
+        await Clients.All.SendAsync("ReceiveWinStatus", message);
+    }
 }

@@ -1,7 +1,13 @@
+using Bingo.V1.Business.Actions;
+using MediatR;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddMediatR(
+	typeof(GenerateBingoBoardCommandHandler).Assembly
+);
 
 var app = builder.Build();
 

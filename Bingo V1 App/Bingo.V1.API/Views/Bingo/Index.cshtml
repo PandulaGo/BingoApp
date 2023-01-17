@@ -17,7 +17,7 @@
   font-style:italic;
 }
 
- 
+
 
     .header{
         padding: 15px 25px;
@@ -36,7 +36,7 @@
     }
     .button:hover {background-color: red}
 
- 
+
 
     .button:active {
         background-color: #3e8e41;
@@ -44,7 +44,6 @@
         transform: translateY(4px);
     }
 </style>
-<button id="clickme"  onclick="printSelected(this)"> Click me</button>
 <table align="center">
 <tr>
 
@@ -59,7 +58,7 @@
 <br/>
 <br/>
 
- 
+
 
 <table align="center">
 <tr>
@@ -69,12 +68,32 @@
             {
                 @:</tr><tr>
             }
-
- 
-
-            <td>
-<button class="button" id=@Model[i] onclick="sampleFunction(this)">@Model[i]</button>
-</td>
+                <td>
+                    <button class="button" id=@i onclick="setSelectedNumber(this)">@Model[i]</button>
+                </td>
         }
 </tr>
 </table>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.js"></script>
+
+<script>
+
+    var connection = new signalR.HubConnectionBuilder().withUrl("/bingohub").build(); 
+
+    connection.on("ReceiveMessage", function (playerName, selectedButton) {
+        console.log(playerName, selectedButton)
+    });
+
+    connection.start();
+    function setSelectedNumber(button){
+
+        button.style.backgroundColor = "red";
+        button.disabled = true;        
+
+        connection.invoke("SendMessage", "Ashen",button.innerHTML).catch(function (err) {
+        return console.error(err.toString());
+        });
+        console.log(button.id); 
+}
+
+</script>

@@ -12,10 +12,7 @@ namespace Bingo.V1.API.Controllers
 		{
 			this.mediator = mediator;
 		}
-
-		[HttpGet]
-		[Route("generatebingoboard")]
-		public ActionResult GenerateBingoBoard()
+		public ActionResult Index()
 		{
 			var boardNumbers = mediator.Send(new GenerateBingoBoardCommand
 			{
@@ -24,5 +21,18 @@ namespace Bingo.V1.API.Controllers
 
 			return View(boardNumbers.Result);
 		}
-	}
+		
+		[HttpPost]
+		[Route("checkWin")]
+        public async Task<ActionResult> CheckWin([FromBody]string s)
+        {
+            //var boardNumbers = await mediator.Send(new GenerateBingoBoardCommand
+            //{
+            //    boardSize = 25
+            //});
+
+			return Ok();
+           
+        }
+    }
 }

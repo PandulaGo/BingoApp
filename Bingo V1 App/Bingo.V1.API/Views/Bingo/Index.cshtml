@@ -83,6 +83,11 @@
         selectedButton[0].disabled = true;    
     });
 
+    connection.on("ReceiveWinStatus", function (message) {
+        console.log(message)
+        alert(message);   
+    });
+
     connection.start();
     function setSelectedNumber(button){
 
@@ -111,7 +116,7 @@ async function sendSelectedNumber(jsonData) {
             document.getElementById(`b1`).style.backgroundColor="yellow";
                                     
            if(data==2)  {
-               document.getElementById(`b1`).style.backgroundColor="yellow";
+            document.getElementById(`b1`).style.backgroundColor="yellow";
             document.getElementById(`b2`).style.backgroundColor="yellow";
            }          
            
@@ -124,7 +129,7 @@ async function sendSelectedNumber(jsonData) {
             
                                     
            if(data==4){
-               document.getElementById(`b1`).style.backgroundColor="yellow";
+            document.getElementById(`b1`).style.backgroundColor="yellow";
             document.getElementById(`b2`).style.backgroundColor="yellow";
             document.getElementById(`b3`).style.backgroundColor="yellow";
             document.getElementById(`b4`).style.backgroundColor="yellow";
@@ -139,11 +144,19 @@ async function sendSelectedNumber(jsonData) {
             document.getElementById(`b5`).style.backgroundColor="yellow";
             document.getElementById(`b4`).style.backgroundColor="yellow";
             alert('BINGO!!!  You win');
+            checkforWin();
            }
         }
     };
     xhr.send(jsonData);
     console.log(xhr.responseText)
+}
+
+function checkforWin()
+{
+     connection.invoke("SendWinStatus", "Bad Luck!!! You lost...)").catch(function (err) {
+        return console.error(err.toString());
+        });
 }
 
 </script>

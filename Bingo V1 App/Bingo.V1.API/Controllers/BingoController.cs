@@ -26,7 +26,7 @@ namespace Bingo.V1.API.Controllers
 		[Route("checkWin")]
         public async Task<ActionResult<int>> CheckWin([FromBody]string s)
         {
-			var result = 3;
+			var result = 5;
 
 			return Ok(result);
            
